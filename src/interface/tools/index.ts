@@ -3,6 +3,7 @@
 import heading from "./heading";
 import history from "./history";
 import relationBlock from "./relation-block";
+import relationInlineBlock from "./relation-inline-block";
 import paragraph from "./paragraph";
 import codeBlock from "./code-block";
 import bold from "./bold";
@@ -12,6 +13,7 @@ import code from "./code";
 import subscript from "./subscript";
 import superscript from "./superscript";
 import link from "./link";
+import relationMark from "./relation-mark";
 import hardBreak from "./hard-break";
 import horizontalRule from "./horizontal-rule";
 import textAlign from "./text-align";
@@ -26,6 +28,7 @@ import type { Tool, ToolSelection, InterfaceOption } from "../types";
 
 const tools: Tool[] = [
     relationBlock,
+    relationInlineBlock,
     paragraph,
     codeBlock,
     heading(1),
@@ -43,6 +46,7 @@ const tools: Tool[] = [
     link.add,
     link.remove,
     link.auto,
+    relationMark,
     hardBreak,
     horizontalRule,
     textAlign,
@@ -58,12 +62,17 @@ const tools: Tool[] = [
 
 export const selectedTools = (
     selection: ToolSelection,
-    includeRelationBlock = false
+    includeRelationNodes = false
 ) =>
     tools.filter(
         ({ key }) =>
             selection.indexOf(key) >= 0 ||
-            (includeRelationBlock && key == "relation-block")
+            (includeRelationNodes &&
+                [
+                    "relation-block",
+                    "relation-inline-block",
+                    "relation-mark",
+                ].indexOf(key) >= 0)
     );
 
 export const toolsExtensions = (selection: ToolSelection): AnyExtension[] => {
@@ -95,8 +104,4 @@ export const interfaceOptions: InterfaceOption[] = optionalTools.map(
 
 export const interfaceOptionsDefault: string[] = optionalTools.map(
     ({ key }) => key
-);
-
-export const relationBlockTool: Tool | undefined = tools.find(
-    ({ key }) => key === "relation-block"
 );
